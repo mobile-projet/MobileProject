@@ -52,11 +52,11 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
         val signInOptions : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(context!!, signInOptions);
-        /*val account = GoogleSignIn.getLastSignedInAccount(context!!);
+        val account = GoogleSignIn.getLastSignedInAccount(context!!);
 
         if(account != null) {
-            viewF.findNavController().navigate(R.id.action_listFragment_to_detailFragment);
-        }*/
+            updateUI(account);
+        }
 
         // Inflate the layout for this fragment
         return viewF;
@@ -72,12 +72,18 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
     fun handleResult(result : Task<GoogleSignInAccount>) {
         try {
             val account = result.getResult(ApiException::class.java);
+            if(account != null) {
+                updateUI(account);
+            }
         } catch (e: ApiException) {
             Log.w("E", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
     fun updateUI(account: GoogleSignInAccount) {
+        model?.userName = account.displayName;
+        Log.e("E", "signed in ${model?.userName}");
+        viewF.findNavController().navigate(R.id.action_listFragment_to_detailFragment);
 
     }
 
