@@ -9,7 +9,8 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
 
     val items: MutableLiveData<List<OrderItem>> = MutableLiveData();
 
-    var userName: String = "Not Signed In";
+    var userName: String? = null;
+    var email : String? = null;
 
 
 

@@ -1,13 +1,23 @@
 package com.example.loginchrome
 
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import com.google.android.gms.auth.api.signin.*
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 
 /**
@@ -15,20 +25,80 @@ import com.google.android.gms.common.api.GoogleApiClient
  *
  */
 class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+
+    private lateinit var viewF : View;
+
+    private lateinit var signIn : SignInButton;
+    private lateinit var mGoogleSignInClient: GoogleSignInClient;
+
+    private var model : OrderViewModel? = null;
+
+    val REQ_CODE = 9001;
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        viewF = inflater.inflate(R.layout.fragment_login_screen, container, false);
+
+
+        model = activity?.let { ViewModelProviders.of(it).get(OrderViewModel::class.java)  }
+
+        signIn = viewF.findViewById(R.id.signIn);
+
+        signIn.setOnClickListener(this);
+
+        val signInOptions : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(context!!, signInOptions);
+        /*val account = GoogleSignIn.getLastSignedInAccount(context!!);
+
+        if(account != null) {
+            viewF.findNavController().navigate(R.id.action_listFragment_to_detailFragment);
+        }*/
+
+        // Inflate the layout for this fragment
+        return viewF;
+    }
+
+    //sign into the application and navigate to the main fragment
+    fun signIn() {
+        val intent : Intent = mGoogleSignInClient.signInIntent;
+        startActivityForResult(intent, REQ_CODE);
+
+    }
+
+    fun handleResult(result : Task<GoogleSignInAccount>) {
+        try {
+            val account = result.getResult(ApiException::class.java);
+        } catch (e: ApiException) {
+            Log.w("E", "signInResult:failed code=" + e.getStatusCode());
+        }
+    }
+
+    fun updateUI(account: GoogleSignInAccount) {
+
+    }
+
     override fun onClick(v: View?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when(v?.id) {
+            R.id.signIn -> signIn();
+        }
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_screen, container, false)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == REQ_CODE) {
+            val result = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleResult(result);
+        }
+
     }
 
 
