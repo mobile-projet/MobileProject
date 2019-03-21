@@ -56,9 +56,12 @@ class AddOrderFragment : Fragment() {
             val tapingoOrderId = findViewById<EditText>(R.id.editText4)
             val locationToDropOff = findViewById<EditText>(R.id.editText5);
 
-            val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString());
 
-            model?.items?.postValue(model.items.value?.plusElement(orderItem));
+            findViewById<Button>(R.id.addToOrder).setOnClickListener{
+                val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
+                model?.addItem(orderItem);
+
+            }
         };
 
         return viewF;

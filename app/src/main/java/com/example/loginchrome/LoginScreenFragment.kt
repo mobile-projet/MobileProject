@@ -18,6 +18,7 @@ import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import java.lang.Exception
 
 
 /**
@@ -88,8 +89,10 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
     }
 
     fun updateUI(account: GoogleSignInAccount) {
-        model?.userName = account.displayName;
-        Log.e("E", "signed in ${model?.userName}");
+        model?.userName = account.displayName ?: throw Exception();
+        model?.email = account.email ?: throw Exception();
+        model?.picture = account.photoUrl.toString();
+        Log.e("E", "signed in ${model?.userName} + ${model?.picture}");
         viewF.findNavController().navigate(R.id.action_loginFragment_to_viewOrdersFragment);
 
     }

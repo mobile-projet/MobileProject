@@ -8,7 +8,9 @@ data class OrderItem(
     val toLocation: String,
     val customerName: String,
     val orderId: String?, //sometimes tapingo ppl require you to have order confirmation before you can get your food
-    val orderState: OrderState = OrderState.NOT_READY
+    val posterEmail: String,
+    var orderState: OrderState = OrderState.NOT_READY,
+    var carrierEmail: String = "None"//will be updated when they claim the item- EMAIL OF CARRIER
 
 
 )

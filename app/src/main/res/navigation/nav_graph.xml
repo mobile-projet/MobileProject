@@ -17,5 +17,14 @@
     <fragment android:id="@+id/viewOrdersFragment" android:name="com.example.loginchrome.ViewOrdersFragment"
               android:label="fragment_detail" tools:layout="@layout/fragment_view_orders">
         <action android:id="@+id/action_viewOrdersFragment_to_addOrderFragment" app:destination="@id/addOrderFragment"/>
+        <action android:id="@+id/action_viewOrdersFragment_to_displayOrderFragment"
+                app:destination="@id/displayOrderFragment"/>
+    </fragment>
+
+    <fragment android:id="@+id/displayOrderFragment" android:name="com.example.loginchrome.displayOrderFragment"
+              android:label="fragment_detail" tools:layout="@layout/fragment_display_order">
+
+        <action android:id="@+id/action_displayOrderFragment_to_viewOrdersFragment"
+                app:destination="@id/viewOrdersFragment"/>
     </fragment>
 </navigation>

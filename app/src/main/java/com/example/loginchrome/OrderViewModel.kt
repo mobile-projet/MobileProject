@@ -9,8 +9,15 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
 
     val items: MutableLiveData<List<OrderItem>> = MutableLiveData();
 
-    var userName: String? = null;
-    var email : String? = null;
+    var userName: String = "Not Signed In";
+    var email : String = "Not Signed In";
+    var picture: String = "Not Signed In";
+
+    var currentOrder : OrderItem? = null;
+
+    fun addItem(item: OrderItem) {
+        items.postValue(items.value?.plusElement(item) ?: listOf(item));
+    }
 
 
 
