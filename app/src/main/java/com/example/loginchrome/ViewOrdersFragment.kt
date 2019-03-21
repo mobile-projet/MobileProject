@@ -1,16 +1,12 @@
 package com.example.loginchrome
 
-import android.content.Context
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -18,9 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import org.w3c.dom.Text
 
 
 class ViewOrdersFragment : Fragment() {
@@ -42,13 +35,15 @@ class ViewOrdersFragment : Fragment() {
 
 
         val recyclerView = viewF.findViewById<RecyclerView>(R.id.recyclerView)
-        val adapter = MovieListAdapter()
+        val adapter = OrderListAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
         model?.items?.observeForever {
             adapter.setMovies(it)
         }
+
+        model?.adapter = adapter;
 
         //model?.addItem(OrderItem(1.0, "yolo", "fromloc", "toLoc", "my name", "", model?.email ?: "Error"));
 
@@ -61,35 +56,35 @@ class ViewOrdersFragment : Fragment() {
         return viewF;
     }
 
-    inner class MovieListAdapter():
-        RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>(){
-        private var movies = emptyList<OrderItem>()
+    inner class OrderListAdapter():
+        RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(){
+        private var orders = emptyList<OrderItem>()
 
-        internal fun setMovies(movies: List<OrderItem>) {
-            this.movies = movies
+        internal fun setMovies(orders: List<OrderItem>) {
+            this.orders = orders
             notifyDataSetChanged()
         }
 
         override fun getItemCount(): Int {
 
-            return movies.size
+            return orders.size
         }
 
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
 
 
             val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_view, parent, false)
-            return MovieViewHolder(v)
+            return OrderViewHolder(v)
         }
 
-        override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
 
 
             //holder.bindItems(movieList[position])
 
-            val item = movies[position];
+            val item = orders[position];
 
             holder.view.findViewById<TextView>(R.id.fromTextView).text="From: ${item.fromLocation}"
 
@@ -101,7 +96,7 @@ class ViewOrdersFragment : Fragment() {
 
             when(item.orderState) {
                 OrderState.NOT_READY -> {
-                    avail.setTextColor(Color.GREEN)
+                    avail.setTextColor(Color.GREEN);
                     avail.text = "AVAILABLE"
                 };
                 OrderState.IN_ROUTE -> {
@@ -142,7 +137,7 @@ class ViewOrdersFragment : Fragment() {
         }
 
 
-        inner class MovieViewHolder(val view: View): RecyclerView.ViewHolder(view), View.OnClickListener{
+        inner class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view), View.OnClickListener{
             override fun onClick(view: View?){
 
                 if (view != null) {

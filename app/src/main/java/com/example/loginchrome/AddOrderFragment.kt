@@ -13,6 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_add_order.*
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 
 class AddOrderFragment : Fragment() {
@@ -46,7 +51,7 @@ class AddOrderFragment : Fragment() {
                 p0: AdapterView<*>?, p1: View?, p2: Int, p3:
                 Long
             ) {
-                Toast.makeText(context, myStrings[p2], Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, myStrings[p2], Toast.LENGTH_LONG).show()
             }
         }
 
@@ -59,9 +64,20 @@ class AddOrderFragment : Fragment() {
 
 
             findViewById<Button>(R.id.addToOrder).setOnClickListener{
-                val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
-                model?.addItem(orderItem);
-                viewF.findNavController().navigate(R.id.action_addOrderFragment_to_viewOrdersFragment);
+
+                /*if(nameBox.text.isBlank() || orderName.text.isBlank() || tapingoOrderId.text.isBlank() || locationToDropOff.text.isBlank()) {
+                    Toast.makeText(context, "Please fill out the required fields", Toast.LENGTH_SHORT);
+                } else {*/
+                    val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
+                    model?.addItem(orderItem);
+
+                    val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager;
+                    imm.hideSoftInputFromWindow(viewF.getWindowToken(), 0)
+
+                    viewF.findNavController().navigate(R.id.action_addOrderFragment_to_viewOrdersFragment);
+                //}
+
+
 
             }
         };
