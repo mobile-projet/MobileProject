@@ -52,14 +52,21 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
         val signInOptions : GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(context!!, signInOptions);
+
+
+        // Inflate the layout for this fragment
+        return viewF;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val account = GoogleSignIn.getLastSignedInAccount(context!!);
 
         if(account != null) {
             updateUI(account);
         }
 
-        // Inflate the layout for this fragment
-        return viewF;
     }
 
     //sign into the application and navigate to the main fragment
@@ -83,7 +90,7 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
     fun updateUI(account: GoogleSignInAccount) {
         model?.userName = account.displayName;
         Log.e("E", "signed in ${model?.userName}");
-        viewF.findNavController().navigate(R.id.action_listFragment_to_detailFragment);
+        viewF.findNavController().navigate(R.id.action_loginFragment_to_viewOrdersFragment);
 
     }
 

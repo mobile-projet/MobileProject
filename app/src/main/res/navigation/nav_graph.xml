@@ -5,7 +5,7 @@
 
     <fragment android:id="@+id/loginFragment" android:name="com.example.loginchrome.LoginScreenFragment" android:label="fragment_list"
               tools:layout="@layout/fragment_login_screen">
-        <action android:id="@+id/action_listFragment_to_detailFragment" app:destination="@id/addOrderFragment"/>
+        <action android:id="@+id/action_loginFragment_to_viewOrdersFragment" app:destination="@id/viewOrdersFragment"/>
     </fragment>
 
     <fragment android:id="@+id/addOrderFragment" android:name="com.example.loginchrome.AddOrderFragment"
