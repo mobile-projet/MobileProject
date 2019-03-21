@@ -124,7 +124,6 @@
     <Button
             android:id="@+id/addToOrder"
             android:layout_width="173dp"
-            android:layout_weight="match_parent"
             android:text="Add to Order"
             android:scaleType="fitCenter"
             android:layout_marginTop="585dp"

@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Spinner
-import android.widget.Toast
-import android.widget.ArrayAdapter
+import android.widget.*
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_add_order.*
 
 
@@ -27,6 +26,8 @@ class AddOrderFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         viewF = inflater.inflate(R.layout.fragment_add_order, container, false);
+
+        val model = activity?.let { ViewModelProviders.of(it).get(OrderViewModel::class.java) }
 
 
         spinner = viewF.findViewById<Spinner>(R.id.place);
@@ -47,6 +48,18 @@ class AddOrderFragment : Fragment() {
                 Toast.makeText(context, myStrings[p2], Toast.LENGTH_LONG).show()
             }
         }
+
+        viewF.apply {
+            val nameBox = findViewById<EditText>(R.id.editText1)
+            val orderName = findViewById<EditText>(R.id.editText2)
+            val orderFrom = findViewById<Spinner>(R.id.place)
+            val tapingoOrderId = findViewById<EditText>(R.id.editText4)
+            val locationToDropOff = findViewById<EditText>(R.id.editText5);
+
+            val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString());
+
+            model?.items?.postValue(model.items.value?.plusElement(orderItem));
+        };
 
         return viewF;
     }
