@@ -11,6 +11,7 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_add_order.*
 
 
@@ -60,6 +61,7 @@ class AddOrderFragment : Fragment() {
             findViewById<Button>(R.id.addToOrder).setOnClickListener{
                 val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
                 model?.addItem(orderItem);
+                viewF.findNavController().navigate(R.id.action_addOrderFragment_to_viewOrdersFragment);
 
             }
         };

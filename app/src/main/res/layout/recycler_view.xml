@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_margin="5dp">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              xmlns:tools="http://schemas.android.com/tools"
@@ -9,22 +15,24 @@
             android:text="From:"
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/fromTextView"
-            android:textSize="18sp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
+            android:textSize="14sp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"/>
     <TextView
             android:text="To:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/toTextView"
-            android:textSize="18sp" app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14sp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:layout_marginTop="7dp"
-            app:layout_constraintTop_toBottomOf="@+id/fromTextView"/>
+            app:layout_constraintTop_toBottomOf="@+id/fromTextView" android:textColor="@android:color/black"/>
     <TextView
             android:text="Payment: $"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/paymentTextView" android:textSize="18sp" android:layout_marginStart="85dp"
-            app:layout_constraintStart_toEndOf="@+id/fromTextView" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"/>
+            android:id="@+id/paymentTextView" android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp" android:layout_marginStart="145dp"
+            app:layout_constraintStart_toStartOf="parent" android:textColor="@android:color/black"/>
     <TextView
             android:text="AVAILABLE"
             android:layout_width="wrap_content"
@@ -35,3 +43,4 @@
             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

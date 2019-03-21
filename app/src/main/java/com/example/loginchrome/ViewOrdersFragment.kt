@@ -50,7 +50,7 @@ class ViewOrdersFragment : Fragment() {
             adapter.setMovies(it)
         }
 
-        model?.addItem(OrderItem(1.0, "yolo", "fromloc", "toLoc", "my name", "", model?.email ?: "Error"));
+        //model?.addItem(OrderItem(1.0, "yolo", "fromloc", "toLoc", "my name", "", model?.email ?: "Error"));
 
 
         val addOrderButton = viewF.findViewById<Button>(R.id.addOrderButton);
