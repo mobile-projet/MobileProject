@@ -10,6 +10,14 @@
                                                        android:layout_height="wrap_content">
 
 
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Payment" android:id="@+id/editText3"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/place" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"/>
         <TextView
                 android:text="Order Item"
                 android:layout_width="wrap_content"
@@ -88,10 +96,11 @@
                 android:text="Add Order"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/addToOrder" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/place" app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/addToOrder"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/editText3"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
