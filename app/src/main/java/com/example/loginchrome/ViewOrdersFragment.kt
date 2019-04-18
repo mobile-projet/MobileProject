@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -20,7 +22,8 @@ class ViewOrdersFragment : Fragment() {
 
     private lateinit var viewF: View;
 
-    private var model : OrderViewModel? = null;
+    private var model : OrderViewModel? = null
+    private lateinit var fromSpinner: Spinner
 
 
     override fun onCreateView(
@@ -32,7 +35,16 @@ class ViewOrdersFragment : Fragment() {
         // Inflate the layout for this fragment
 
         model  = activity?.let{ViewModelProviders.of(it).get(OrderViewModel::class.java)}
+        fromSpinner = viewF.findViewById(R.id.fromSpinner)
+        viewF.findViewById<Spinner>(R.id.fromSpinner).onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //do nothing
+            }
 
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                model?.selectedFrom = fromSpinner.selectedItem.toString()
+            }
+        }
 
         val recyclerView = viewF.findViewById<RecyclerView>(R.id.recyclerView)
         val adapter = OrderListAdapter()
@@ -61,7 +73,7 @@ class ViewOrdersFragment : Fragment() {
         private var orders = emptyList<OrderItem>()
 
         internal fun setMovies(orders: List<OrderItem>) {
-            this.orders = orders
+            this.orders = orders.filter {  it.fromLocation.equals(model?.selectedFrom) }
             notifyDataSetChanged()
         }
 
