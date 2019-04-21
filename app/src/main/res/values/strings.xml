@@ -3,4 +3,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="diningHalls">
+        <item name= "ABP Squires">ABP Squires</item>
+        <item name= "ABP Goodwin">ABP Squires</item>
+        <item name= "D2">D2</item>
+        <item name= "Deets">Deets</item>
+        <item name= "DX">DX</item>
+        <item name= "Hokie Grill">Hokie Grill</item>
+        <item name= "Owens">Owens</item>
+        <item name= "Turner">Turner</item>
+        <item name= "West End">West End</item>
+    </string-array>
 </resources>

@@ -24,6 +24,8 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
 
     var adapter : RecyclerView.Adapter<ViewOrdersFragment.OrderListAdapter.OrderViewHolder>? = null;
 
+    var selectedFrom: String = ""
+
     fun addItem(item: OrderItem) {
         items.postValue(items.value?.plusElement(item) ?: listOf(item));
     }
