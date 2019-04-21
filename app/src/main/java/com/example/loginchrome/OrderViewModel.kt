@@ -4,8 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 
 class OrderViewModel(application: Application): AndroidViewModel(application) {
+
+    val database = FirebaseDatabase.getInstance();
+
+    var firebaseUser : FirebaseUser? = null;
 
 
     val items: MutableLiveData<List<OrderItem>> = MutableLiveData();

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_add_order.*
 import android.app.Activity
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
 
@@ -63,6 +64,7 @@ class AddOrderFragment : Fragment() {
             val locationToDropOff = findViewById<EditText>(R.id.editText5);
 
 
+            val ref = model?.database?.getReference("message")
             findViewById<Button>(R.id.addToOrder).setOnClickListener{
 
                 /*if(nameBox.text.isBlank() || orderName.text.isBlank() || tapingoOrderId.text.isBlank() || locationToDropOff.text.isBlank()) {
@@ -74,7 +76,14 @@ class AddOrderFragment : Fragment() {
                     val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager;
                     imm.hideSoftInputFromWindow(viewF.getWindowToken(), 0)
 
+                    if(ref != null) {
+                        Log.e("yolo", "NOT NULL");
+                    }
+                    ref?.setValue(orderItem);
+
                     viewF.findNavController().navigate(R.id.action_addOrderFragment_to_viewOrdersFragment);
+
+
                 //}
 
 
