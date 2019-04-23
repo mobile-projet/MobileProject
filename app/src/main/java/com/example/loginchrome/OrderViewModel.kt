@@ -26,6 +26,9 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
 
     var selectedFrom: String = ""
 
+    var filterMyOrders: Boolean = false
+    var filterMyCarries: Boolean = false
+
     fun addItem(item: OrderItem) {
         items.postValue(items.value?.plusElement(item) ?: listOf(item));
     }

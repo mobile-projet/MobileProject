@@ -42,7 +42,29 @@ class ViewOrdersFragment : Fragment() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                model?.selectedFrom = fromSpinner.selectedItem.toString()
+                model?.selectedFrom = fromSpinner.selectedItem.toString();
+                model?.items?.postValue(model?.items?.value ?: listOf<OrderItem>())
+
+            }
+        }
+        viewF.findViewById<Spinner>(R.id.fromSpinner).onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //do nothing
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (fromSpinner.selectedItem.toString().equals("My Carries")){
+                    model?.filterMyCarries = true
+                    model?.filterMyOrders = false
+                } else if (fromSpinner.selectedItem.toString().equals("My Orders")){
+                    model?.filterMyCarries = false
+                    model?.filterMyOrders = true
+                } else {
+                    model?.filterMyCarries = false
+                    model?.filterMyOrders = false
+                }
+                model?.items?.postValue(model?.items?.value ?: listOf<OrderItem>())
+
             }
         }
 
@@ -73,7 +95,24 @@ class ViewOrdersFragment : Fragment() {
         private var orders = emptyList<OrderItem>()
 
         internal fun setMovies(orders: List<OrderItem>) {
-            this.orders = orders.filter {  it.fromLocation.equals(model?.selectedFrom) }
+            // filter by from Location
+            this.orders = orders.filter {
+                if(!(model?.selectedFrom?.equals("All") ?: true))
+                    it.fromLocation.equals(model?.selectedFrom)
+                else true
+            }
+
+            // filter by my orders or my carries
+            if (model?.filterMyCarries ?: false){
+                this.orders = this.orders.filter {
+                    it.carrierEmail.equals(model?.email)
+                }
+            } else if (model?.filterMyOrders ?: false) {
+                this.orders = this.orders.filter {
+                    it.posterEmail.equals(model?.email)
+                }
+            }
+
             notifyDataSetChanged()
         }
 
