@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service android:name="com.example.loginchrome.UpdateService" android:label="Update Service"/>
+
+        <receiver android:name="com.example.loginchrome.UpdatedListReceiver"/>
     </application>
+
+
 
 </manifest>

@@ -1,15 +1,20 @@
 package com.example.loginchrome
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import java.io.Serializable
 
-class OrderViewModel(application: Application): AndroidViewModel(application) {
+class OrderViewModel(application: Application): AndroidViewModel(application), Serializable {
 
     val database = FirebaseDatabase.getInstance();
+
+    val db = FirebaseFirestore.getInstance()
 
     var firebaseUser : FirebaseUser? = null;
 
@@ -28,6 +33,10 @@ class OrderViewModel(application: Application): AndroidViewModel(application) {
 
     fun addItem(item: OrderItem) {
         items.postValue(items.value?.plusElement(item) ?: listOf(item));
+    }
+
+    fun updateItems(item: List<OrderItem>) {
+        items.postValue(item);
     }
 
 

@@ -17,8 +17,11 @@ import android.app.Activity
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
-
-
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class AddOrderFragment : Fragment() {
@@ -64,22 +67,24 @@ class AddOrderFragment : Fragment() {
             val locationToDropOff = findViewById<EditText>(R.id.editText5);
 
 
-            val ref = model?.database?.getReference("message")
             findViewById<Button>(R.id.addToOrder).setOnClickListener{
 
                 /*if(nameBox.text.isBlank() || orderName.text.isBlank() || tapingoOrderId.text.isBlank() || locationToDropOff.text.isBlank()) {
                     Toast.makeText(context, "Please fill out the required fields", Toast.LENGTH_SHORT);
                 } else {*/
                     val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
-                    model?.addItem(orderItem);
+                    //model?.addItem(orderItem);
 
                     val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager;
                     imm.hideSoftInputFromWindow(viewF.getWindowToken(), 0)
 
-                    if(ref != null) {
-                        Log.e("yolo", "NOT NULL");
-                    }
-                    ref?.setValue(orderItem);
+                    orderItem.id = Integer.toHexString(orderItem.hashCode());
+
+                    model?.db?.collection("orders")?.
+                        document(orderItem.id)?.
+                        set(orderItem);
+
+                    //sendOrderItem(model?.db, orderItem);
 
                     viewF.findNavController().navigate(R.id.action_addOrderFragment_to_viewOrdersFragment);
 
@@ -92,6 +97,15 @@ class AddOrderFragment : Fragment() {
         };
 
         return viewF;
+    }
+
+    fun sendOrderItem(db : FirebaseFirestore?, item: OrderItem) {
+        WorkManager.getInstance().beginUniqueWork("YOLO", ExistingWorkPolicy.KEEP, OneTimeWorkRequestBuilder<UploadItem>().setInputData(
+            workDataOf("itemObj" to item,
+                "collectionName" to "orders",
+                "database" to db,
+                "id" to item.id)
+        ).build()).enqueue();
     }
 }
 

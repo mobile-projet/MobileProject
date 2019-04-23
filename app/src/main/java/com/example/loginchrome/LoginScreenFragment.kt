@@ -71,7 +71,7 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
         val account = GoogleSignIn.getLastSignedInAccount(context!!);
 
         if(account != null) {
-            //updateUI(account);
+            updateUI(account);
         }
 
     }
@@ -82,7 +82,7 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
         startActivityForResult(intent, REQ_CODE);
 
         // Choose authentication providers
-        val providers = arrayListOf(
+        /*val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build());
 
@@ -92,7 +92,7 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build(),
-            RC_SIGN_IN)
+            RC_SIGN_IN)*/
 
     }
 

@@ -1,7 +1,9 @@
 package com.example.loginchrome
 
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +18,24 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Update
 
 
 class ViewOrdersFragment : Fragment() {
+
+
+    var isInitialized = false;
+    var isBound = false;
+    var updateService : UpdateService? = null;
 
     private lateinit var viewF: View;
 
     private var model : OrderViewModel? = null
     private lateinit var fromSpinner: Spinner
+
+    var startServiceIntent: Intent? = null
+    var completionReceiver: UpdatedListReceiver? = null;
+
 
 
     override fun onCreateView(
@@ -53,7 +65,10 @@ class ViewOrdersFragment : Fragment() {
 
         model?.items?.observeForever {
             adapter.setMovies(it)
+
         }
+
+
 
         model?.adapter = adapter;
 
@@ -64,6 +79,18 @@ class ViewOrdersFragment : Fragment() {
         addOrderButton.setOnClickListener { v ->
             v.findNavController().navigate(R.id.action_viewOrdersFragment_to_addOrderFragment);
         }
+
+        if(savedInstanceState != null) {
+            isInitialized = savedInstanceState.getBoolean(INITIALIZE_STATUS);
+
+        }
+        startServiceIntent = Intent(context, UpdateService::class.java);
+        if(!isInitialized) {
+            //viewF.context.startService(startServiceIntent);
+            isInitialized = true;
+        }
+
+        completionReceiver = UpdatedListReceiver(this, model);
 
         return viewF;
     }
@@ -162,6 +189,59 @@ class ViewOrdersFragment : Fragment() {
 
 
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isBound) {
+            context?.unbindService(serviceConnection)
+            isBound = false
+        }
+
+        context?.unregisterReceiver(completionReceiver)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isInitialized && !isBound) {
+            Log.e("YOLO", "bound...");
+            context?.bindService(startServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+        context?.registerReceiver(completionReceiver, IntentFilter(UpdateService.UPDATE_LIST))
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(INITIALIZE_STATUS, isInitialized)
+        super.onSaveInstanceState(outState)
+    }
+
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            Log.e("YOLO", "BOUND");
+
+            val binder = iBinder as UpdateService.MyBinder
+            updateService = binder.getService()
+            isBound = true
+
+            Log.e("YOLO", "BOUND");
+
+            updateService?.callUpdate(model);
+            updateService?.startListener(model);
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            updateService = null
+            isBound = false
+        }
+    }
+
+    companion object {
+        const val INITIALIZE_STATUS = "intialization status"
+        const val CURR_IMAGE = "current image";
     }
 
 }
