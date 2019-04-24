@@ -41,7 +41,7 @@ class AddOrderFragment : Fragment() {
 
 
         spinner = viewF.findViewById<Spinner>(R.id.place);
-        val myStrings = resources.getStringArray(R.array.diningHalls).drop(0);
+        val myStrings = resources.getStringArray(R.array.diningHalls);
         spinner?.adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item, myStrings
