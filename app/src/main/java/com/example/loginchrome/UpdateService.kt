@@ -42,7 +42,9 @@ class UpdateService: Service() {
 
                 for (doc in querySnapshot!!) {
                     if (doc.get("itemName") != null) {
-                        items.add(doc.toObject(OrderItem::class.java))
+                        val item = doc.toObject(OrderItem::class.java);
+                        if(item.orderState != OrderState.DELIVERED)
+                            items.add(item)
                     }
                 }
                 model.updateItems(items);
@@ -57,7 +59,9 @@ class UpdateService: Service() {
                 val items = ArrayList<OrderItem>();
                 for(doc in it!!) {
                     if(doc.get("itemName") != null) {
-                        items.add(doc.toObject(OrderItem::class.java))
+                        val item = doc.toObject(OrderItem::class.java);
+                        if(item.orderState != OrderState.DELIVERED)
+                            items.add(item)
                     }
                 }
 

@@ -4,9 +4,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="diningHalls">
-        <item name= "all">All</item>
+        <item name= "All">All</item>
         <item name= "ABP Squires">ABP Squires</item>
-        <item name= "ABP Goodwin">ABP Squires</item>
+        <item name= "ABP Goodwin">ABP Goodwin</item>
         <item name= "D2">D2</item>
         <item name= "Deets">Deets</item>
         <item name= "DX">DX</item>

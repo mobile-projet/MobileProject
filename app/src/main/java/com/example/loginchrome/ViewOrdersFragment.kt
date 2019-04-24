@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -47,8 +44,18 @@ class ViewOrdersFragment : Fragment() {
         // Inflate the layout for this fragment
 
         model  = activity?.let{ViewModelProviders.of(it).get(OrderViewModel::class.java)}
+
+
         fromSpinner = viewF.findViewById(R.id.fromSpinner)
-        viewF.findViewById<Spinner>(R.id.fromSpinner).onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+
+        ArrayAdapter.createFromResource(viewF.context, R.array.diningHalls, android.R.layout.simple_spinner_item).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            fromSpinner.adapter = adapter
+        }
+
+        fromSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 //do nothing
             }
@@ -56,26 +63,36 @@ class ViewOrdersFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 model?.selectedFrom = fromSpinner.selectedItem.toString();
                 model?.items?.postValue(model?.items?.value ?: listOf<OrderItem>())
-
             }
         }
-        viewF.findViewById<Spinner>(R.id.fromSpinner).onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+
+
+        val typeSpinner : Spinner = viewF.findViewById(R.id.typeSpinner);
+
+        ArrayAdapter.createFromResource(viewF.context, R.array.filterType, android.R.layout.simple_spinner_item).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            typeSpinner.adapter = adapter
+        }
+
+        typeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 //do nothing
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (fromSpinner.selectedItem.toString().equals("My Carries")){
+                if (typeSpinner.selectedItem.toString().equals("My Carries")){
                     model?.filterMyCarries = true
                     model?.filterMyOrders = false
-                } else if (fromSpinner.selectedItem.toString().equals("My Orders")){
+                } else if (typeSpinner.selectedItem.toString().equals("My Orders")){
                     model?.filterMyCarries = false
                     model?.filterMyOrders = true
                 } else {
                     model?.filterMyCarries = false
                     model?.filterMyOrders = false
                 }
-                model?.items?.postValue(model?.items?.value ?: listOf<OrderItem>())
+                model?.items?.postValue(model?.items?.value ?: listOf<OrderItem>());
 
             }
         }
@@ -124,9 +141,18 @@ class ViewOrdersFragment : Fragment() {
         internal fun setMovies(orders: List<OrderItem>) {
             // filter by from Location
             this.orders = orders.filter {
-                if(!(model?.selectedFrom?.equals("All") ?: true))
+                if((model?.selectedFrom?.equals("All") ?: true))
+                    true
+                else
                     it.fromLocation.equals(model?.selectedFrom)
-                else true
+            }
+
+            this.orders = this.orders.filter {
+                if(it.orderState == OrderState.IN_ROUTE) {
+                    if (!it.carrierEmail.equals(model?.email) && !it.posterEmail.equals(model?.email)) {
+                        false
+                    } else true
+                } else true
             }
 
             // filter by my orders or my carries
@@ -139,6 +165,7 @@ class ViewOrdersFragment : Fragment() {
                     it.posterEmail.equals(model?.email)
                 }
             }
+            //this.orders = orders;
 
             notifyDataSetChanged()
         }

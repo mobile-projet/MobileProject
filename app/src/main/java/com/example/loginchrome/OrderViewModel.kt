@@ -29,7 +29,7 @@ class OrderViewModel(application: Application): AndroidViewModel(application), S
 
     var adapter : RecyclerView.Adapter<ViewOrdersFragment.OrderListAdapter.OrderViewHolder>? = null;
 
-    var selectedFrom: String = ""
+    var selectedFrom: String = "All"
 
     var filterMyOrders: Boolean = false
     var filterMyCarries: Boolean = false

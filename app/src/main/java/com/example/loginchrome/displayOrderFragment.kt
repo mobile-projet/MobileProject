@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,14 +47,6 @@ class displayOrderFragment : Fragment() {
 
             val button = findViewById<Button>(R.id.claimOrder);
 
-            if(currentItem?.carrierEmail.equals(model?.email)) {
-                itemOrdered.text = currentItem?.itemName;
-                orderId.text = currentItem?.orderId;
-                customerName.text = currentItem?.customerName;
-                button.visibility = View.GONE;
-            }
-
-
             button.setOnClickListener {
                 currentItem?.carrierEmail = model?.email.toString();
                 itemOrdered.text = currentItem?.itemName;
@@ -62,7 +55,34 @@ class displayOrderFragment : Fragment() {
                 it.visibility = View.GONE;
                 currentItem?.orderState = OrderState.IN_ROUTE;
                 model?.adapter?.notifyDataSetChanged();
+
+                model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem);
             }
+
+            if(currentItem?.carrierEmail.equals(model?.email) || currentItem?.posterEmail.equals(model?.email)) {
+                itemOrdered.text = currentItem?.itemName;
+                orderId.text = currentItem?.orderId;
+                customerName.text = currentItem?.customerName;
+                if(currentItem?.posterEmail.equals(model?.email)) {
+                    button.setOnClickListener {
+                        currentItem?.orderState = OrderState.DELIVERED;
+                        model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem)?.addOnSuccessListener { viewF.findNavController().navigate(R.id.action_displayOrderFragment_to_viewOrdersFragment) };
+
+
+                    }
+                    if(OrderState.IN_ROUTE == currentItem?.orderState) {
+                        button.text = "Mark as Delivered";
+
+                    } else {
+                        button.text = "Delete Entry"
+                    }
+                } else {
+                    button.visibility = View.GONE;
+                }
+            }
+
+
+
         }
         // Inflate the layout for this fragment
         return viewF;

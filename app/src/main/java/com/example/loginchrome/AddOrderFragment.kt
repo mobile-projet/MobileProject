@@ -41,7 +41,7 @@ class AddOrderFragment : Fragment() {
 
 
         spinner = viewF.findViewById<Spinner>(R.id.place);
-        val myStrings = arrayOf("ABP Squires", "D2", "Deets", "DX", "Hokie Grill", "Owens", "Turner", "West End")
+        val myStrings = resources.getStringArray(R.array.diningHalls).drop(0);
         spinner?.adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item, myStrings
@@ -65,6 +65,7 @@ class AddOrderFragment : Fragment() {
             val orderFrom = findViewById<Spinner>(R.id.place)
             val tapingoOrderId = findViewById<EditText>(R.id.editText4)
             val locationToDropOff = findViewById<EditText>(R.id.editText5);
+            val paymentBox = findViewById<EditText>(R.id.editText3);
 
 
             findViewById<Button>(R.id.addToOrder).setOnClickListener{
@@ -72,7 +73,7 @@ class AddOrderFragment : Fragment() {
                 /*if(nameBox.text.isBlank() || orderName.text.isBlank() || tapingoOrderId.text.isBlank() || locationToDropOff.text.isBlank()) {
                     Toast.makeText(context, "Please fill out the required fields", Toast.LENGTH_SHORT);
                 } else {*/
-                    val orderItem = OrderItem(1.0, orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
+                    val orderItem = OrderItem(java.lang.Double.parseDouble(paymentBox.text.toString()), orderName.text.toString(), orderFrom.selectedItem.toString(), locationToDropOff.text.toString(), nameBox.text.toString(),  tapingoOrderId.text.toString(), model?.email ?: "Error");
                     //model?.addItem(orderItem);
 
                     val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager;
