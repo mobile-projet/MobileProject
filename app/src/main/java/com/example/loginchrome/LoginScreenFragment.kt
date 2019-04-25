@@ -71,7 +71,7 @@ class LoginScreenFragment : Fragment(), View.OnClickListener, GoogleApiClient.On
         val account = GoogleSignIn.getLastSignedInAccount(context!!);
 
         if(account != null) {
-            updateUI(account);
+            //updateUI(account);
         }
 
     }

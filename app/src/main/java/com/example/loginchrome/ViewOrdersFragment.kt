@@ -125,7 +125,7 @@ class ViewOrdersFragment : Fragment() {
         }
         startServiceIntent = Intent(context, UpdateService::class.java);
         if(!isInitialized) {
-            //viewF.context.startService(startServiceIntent);
+            viewF.context.startService(startServiceIntent);
             isInitialized = true;
         }
 
