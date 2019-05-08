@@ -72,6 +72,7 @@ class displayOrderFragment : Fragment() {
                     }
                     if(OrderState.IN_ROUTE == currentItem?.orderState) {
                         button.text = "Mark as Delivered";
+                        Notification.send(model?.db, currentItem.carrierEmail, "You have successfully delivered the item with id ".format(currentItem.id));
 
                     } else {
                         button.text = "Delete Entry"
