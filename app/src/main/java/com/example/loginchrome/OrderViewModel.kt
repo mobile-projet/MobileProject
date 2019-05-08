@@ -39,7 +39,7 @@ class OrderViewModel(application: Application): AndroidViewModel(application), S
     }
 
     fun updateItems(item: List<OrderItem>) {
-        items.postValue(item);
+        items.postValue(item)
     }
 
 
