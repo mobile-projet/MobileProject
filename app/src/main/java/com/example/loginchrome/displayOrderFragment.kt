@@ -67,7 +67,7 @@ class displayOrderFragment : Fragment() {
                     button.setOnClickListener {
                         currentItem?.orderState = OrderState.DELIVERED;
                         model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem)?.addOnSuccessListener { viewF.findNavController().navigate(R.id.action_displayOrderFragment_to_viewOrdersFragment) };
-
+                        Notification.send(model?.db, currentItem?.posterEmail ?: "", "Your order has been picked up and is in route to be delivered");
 
                     }
                     if(OrderState.IN_ROUTE == currentItem?.orderState) {

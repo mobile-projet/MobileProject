@@ -1,6 +1,7 @@
 package com.example.loginchrome
 
 import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Math.*
 
 data class Notification(var id : String, val emailTo: String, val message: String) {
     companion object {
@@ -15,12 +16,12 @@ data class Notification(var id : String, val emailTo: String, val message: Strin
 
         }
 
-        fun distanceDeg(lat1:Double, lon1:Double, lat2:Double, lon2:Double):Int{
+        fun distanceDeg(lat1:Double, lon1:Double, lat2:Double, lon2:Double):Double{
 			return distanceRad(lat1*PI/180,lon1*PI/180,lat2*PI/180,lon2*PI/180)
 		}
 
-		fun distanceRad(lat1:Double, lon1:Double, lat2:Double, lon2:Double):Int{
-			return ((6728 as Double)*SQRT(2-2*cos(lat1)*cos(lat2)*cos(lon1-lon2) - 2*sin(lat1)*sin(lat2))).ceil
+		fun distanceRad(lat1:Double, lon1:Double, lat2:Double, lon2:Double):Double{
+			return 6728.0*Math.ceil(Math.sqrt(2-2*cos(lat1)*cos(lat2)*cos(lon1-lon2) - 2*sin(lat1)*sin(lat2)));
 		}
     }
 }
