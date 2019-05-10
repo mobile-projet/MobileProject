@@ -16,6 +16,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Update
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.QuerySnapshot
+import android.content.Context.ACTIVITY_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.app.ActivityManager
+
+
 
 
 class ViewOrdersFragment : Fragment() {
@@ -44,6 +51,8 @@ class ViewOrdersFragment : Fragment() {
         // Inflate the layout for this fragment
 
         model  = activity?.let{ViewModelProviders.of(it).get(OrderViewModel::class.java)}
+
+        model?.db = UpdateService.db;
 
 
         fromSpinner = viewF.findViewById(R.id.fromSpinner)
@@ -118,12 +127,14 @@ class ViewOrdersFragment : Fragment() {
         addOrderButton.setOnClickListener { v ->
             v.findNavController().navigate(R.id.action_viewOrdersFragment_to_addOrderFragment);
         }
+        startServiceIntent = Intent(context, UpdateService::class.java);
+        isInitialized = UpdateService.isRunning;
+        Log.e("YOLO", "IS RUNNING "+ isInitialized)
 
         if(savedInstanceState != null) {
             isInitialized = savedInstanceState.getBoolean(INITIALIZE_STATUS);
 
         }
-        startServiceIntent = Intent(context, UpdateService::class.java);
         if(!isInitialized) {
             viewF.context.startService(startServiceIntent);
             isInitialized = true;
@@ -131,8 +142,11 @@ class ViewOrdersFragment : Fragment() {
 
         completionReceiver = UpdatedListReceiver(this, model);
 
+
+
         return viewF;
     }
+
 
     inner class OrderListAdapter():
         RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>(){
@@ -295,7 +309,7 @@ class ViewOrdersFragment : Fragment() {
 
             Log.e("YOLO", "BOUND");
 
-            updateService?.callUpdate(model);
+            //updateService?.callUpdate(model);
             updateService?.startListener(model);
         }
 

@@ -1,12 +1,18 @@
 package com.example.loginchrome
 
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -48,6 +54,12 @@ class displayOrderFragment : Fragment() {
             val button = findViewById<Button>(R.id.claimOrder);
 
             button.setOnClickListener {
+
+                if(!verifyAvailableNetwork()) {
+                    Toast.makeText(context, "No internet available...", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener;
+                }
+
                 currentItem?.carrierEmail = model?.email.toString();
                 itemOrdered.text = currentItem?.itemName;
                 orderId.text = currentItem?.orderId;
@@ -60,11 +72,16 @@ class displayOrderFragment : Fragment() {
             }
 
             if(currentItem?.carrierEmail.equals(model?.email) || currentItem?.posterEmail.equals(model?.email)) {
+
                 itemOrdered.text = currentItem?.itemName;
                 orderId.text = currentItem?.orderId;
                 customerName.text = currentItem?.customerName;
                 if(currentItem?.posterEmail.equals(model?.email)) {
                     button.setOnClickListener {
+                        if(!verifyAvailableNetwork()) {
+                            Toast.makeText(context, "No internet available...", Toast.LENGTH_LONG).show()
+                            return@setOnClickListener;
+                        }
                         currentItem?.orderState = OrderState.DELIVERED;
                         model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem)?.addOnSuccessListener { viewF.findNavController().navigate(R.id.action_displayOrderFragment_to_viewOrdersFragment) };
                         Notification.send(model?.db, currentItem?.posterEmail ?: "", "Your order has been picked up and is in route to be delivered");
@@ -87,6 +104,14 @@ class displayOrderFragment : Fragment() {
         }
         // Inflate the layout for this fragment
         return viewF;
+    }
+
+
+
+    fun verifyAvailableNetwork():Boolean{
+        val connectivityManager=activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val networkInfo=connectivityManager?.activeNetworkInfo
+        return  networkInfo!=null && networkInfo.isConnected
     }
 
 

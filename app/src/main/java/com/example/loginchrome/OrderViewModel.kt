@@ -14,7 +14,7 @@ class OrderViewModel(application: Application): AndroidViewModel(application), S
 
     val database = FirebaseDatabase.getInstance();
 
-    val db = FirebaseFirestore.getInstance()
+    var db = UpdateService.db;
 
     var firebaseUser : FirebaseUser? = null;
 

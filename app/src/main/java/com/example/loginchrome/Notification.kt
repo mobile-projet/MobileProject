@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.Math.*
 
 data class Notification(var id : String, val emailTo: String, val message: String) {
+    constructor() : this("", "", "")
     companion object {
         fun send(db: FirebaseFirestore?, to: String, msg : String){
 

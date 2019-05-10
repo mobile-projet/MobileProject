@@ -105,7 +105,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/editText3"/>
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/formWarning"
+                android:layout_marginTop="8dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/formWarning"
+                app:layout_constraintTop_toBottomOf="@+id/editText3" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp" android:textColor="@color/colorAccent"
+                android:visibility="invisible" android:text="@string/form_warning"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
