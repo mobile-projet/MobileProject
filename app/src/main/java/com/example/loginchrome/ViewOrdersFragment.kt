@@ -223,7 +223,7 @@ class ViewOrdersFragment : Fragment() {
                         avail.setTextColor(Color.BLUE);
                         avail.text = "VIEW";
                     } else if(item.posterEmail.equals(model?.email)) {
-                        avail.setTextColor(Color.YELLOW)
+                        avail.setTextColor(Color.RED)
                         avail.text = "IN ROUTE"
                     } else {
                         avail.setTextColor(Color.RED);

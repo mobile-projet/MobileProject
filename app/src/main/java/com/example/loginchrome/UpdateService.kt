@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -58,44 +59,7 @@ class UpdateService: Service() {
             notificationEvent?.remove();
             notificationEvent = db?.collection("notifications")?.whereEqualTo("emailTo", account.email)
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    Log.e("yolo", "received notif");
-
-                    querySnapshot?.forEach { t ->
-                        val notif = t.toObject(Notification::class.java)
-
-                        // Create an explicit intent for an Activity in your app
-                        val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-                        var builder = NotificationCompat.Builder(this, "YOLO")
-                            .setSmallIcon(R.drawable.navigation_empty_icon)
-                            .setContentTitle("Notification")
-                            .setContentText(notif.message)
-                            .setContentIntent(pendingIntent)
-                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            val name = getString(R.string.channel_name)
-                            val descriptionText = getString(R.string.channel_description)
-                            val importance = NotificationManager.IMPORTANCE_HIGH
-                            val channel = NotificationChannel("YOLO", name, importance).apply {
-                                description = descriptionText
-                            }
-                            // Register the channel with the system
-                            val notificationManager: NotificationManager =
-                                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                            notificationManager.createNotificationChannel(channel)
-
-                            with(NotificationManagerCompat.from(applicationContext)) {
-                                // notificationId is a unique int for each notification that you must define
-                                notify(notif.hashCode(), builder.build())
-                                Log.e("YOLO", "SENDING NOTIFICATION");
-                                db?.collection("notifications")?.document(notif.id)?.delete();
-                            }
-                        }
-                    }
+                    notificationHandling(querySnapshot);
                 }
 
         }
@@ -123,55 +87,60 @@ class UpdateService: Service() {
                 model?.updateItems(items);
             });
 
+        notificationEvent?.remove();
+        notificationEvent = model?.db?.collection("notifications")?.whereEqualTo("emailTo", model?.email)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            notificationHandling(querySnapshot)
 
-        if(notificationEvent == null) {
-            notificationEvent = model?.db?.collection("notifications")?.whereEqualTo("emailTo", model?.email)?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                querySnapshot?.forEach { t ->
-                    val notif = t.toObject(Notification::class.java)
-
-                    // Create an explicit intent for an Activity in your app
-                    val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                    val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-                    var builder = NotificationCompat.Builder(this, "YOLO")
-                        .setSmallIcon(R.drawable.navigation_empty_icon)
-                        .setContentTitle("Notification")
-                        .setContentText(notif.message)
-                        .setContentIntent(pendingIntent).setVibrate(LongArray(0))
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val name = getString(R.string.channel_name)
-                        val descriptionText = getString(R.string.channel_description)
-                        val importance = NotificationManager.IMPORTANCE_HIGH
-                        val channel = NotificationChannel("YOLO", name, importance).apply {
-                            description = descriptionText
-                        }
-                        // Register the channel with the system
-                        val notificationManager: NotificationManager =
-                            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.createNotificationChannel(channel)
-
-                        with(NotificationManagerCompat.from(applicationContext)) {
-                            // notificationId is a unique int for each notification that you must define
-                            notify(notif.hashCode(), builder.build())
-                            Log.e("YOLO", "SENDING NOTIFICATION");
-                            db?.collection("notifications")?.document(notif.id)?.delete();
-
-                        }
-                    }
-                }
-
-            }
         }
 
 
 
     }
-    
+
+    fun notificationHandling(querySnapshot: QuerySnapshot?) {
+        Log.e("yolo", "received notif");
+
+        querySnapshot?.forEach { t ->
+            val notif = t.toObject(Notification::class.java)
+
+            // Create an explicit intent for an Activity in your app
+            val intent = Intent(applicationContext, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+            var builder = NotificationCompat.Builder(this, "YOLO")
+                .setSmallIcon(R.drawable.navigation_empty_icon)
+                .setContentTitle("Notification")
+                .setContentText(notif.message)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val name = getString(R.string.channel_name)
+                val descriptionText = getString(R.string.channel_description)
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel("YOLO", name, importance).apply {
+                    description = descriptionText
+                }
+                channel.setShowBadge(true);
+                channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+
+                with(NotificationManagerCompat.from(applicationContext)) {
+                    // notificationId is a unique int for each notification that you must define
+                    notify(notif.hashCode(), builder.build())
+                    Log.e("YOLO", "SENDING NOTIFICATION");
+                    db?.collection("notifications")?.document(notif.id)?.delete();
+                }
+            }
+        }
+    }
+
+
     fun callUpdate(model: OrderViewModel?) {
         Log.e("yolo", "calling update")
         model?.db?.collection("orders")?.get()?.
@@ -188,6 +157,12 @@ class UpdateService: Service() {
                 model.updateItems(items);
 
             }
+    }
+
+    fun verifyAvailableNetwork():Boolean{
+        val connectivityManager= application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val networkInfo=connectivityManager?.activeNetworkInfo
+        return  networkInfo!=null && networkInfo.isConnected
     }
 
 

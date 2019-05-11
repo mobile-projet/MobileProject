@@ -69,6 +69,7 @@ class displayOrderFragment : Fragment() {
                 model?.adapter?.notifyDataSetChanged();
 
                 model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem);
+                Notification.send(model?.db, currentItem?.posterEmail ?: "", "Your order has been picked up and is in route to be delivered");
             }
 
             if(currentItem?.carrierEmail.equals(model?.email) || currentItem?.posterEmail.equals(model?.email)) {
@@ -84,12 +85,11 @@ class displayOrderFragment : Fragment() {
                         }
                         currentItem?.orderState = OrderState.DELIVERED;
                         model?.db?.collection("orders")?.document(currentItem?.id!!)?.set(currentItem)?.addOnSuccessListener { viewF.findNavController().navigate(R.id.action_displayOrderFragment_to_viewOrdersFragment) };
-                        Notification.send(model?.db, currentItem?.posterEmail ?: "", "Your order has been picked up and is in route to be delivered");
+                        Notification.send(model?.db, currentItem?.carrierEmail ?: "", "You have successfully delivered the item with id ".format(currentItem?.id));
 
                     }
                     if(OrderState.IN_ROUTE == currentItem?.orderState) {
                         button.text = "Mark as Delivered";
-                        Notification.send(model?.db, currentItem.carrierEmail, "You have successfully delivered the item with id ".format(currentItem.id));
 
                     } else {
                         button.text = "Delete Entry"
